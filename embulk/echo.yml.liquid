@@ -1,0 +1,17 @@
+in:
+  type: postgresql
+  host: localhost
+  user: tomoya
+  password: tomoya
+  database: "{{ env.database }}"
+  query: 
+    SELECT
+      id AS product_id,
+      product_name AS product_name
+    FROM
+      product
+    ORDER BY
+    product_id
+
+out:
+  type: stdout

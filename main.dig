@@ -1,0 +1,39 @@
+timezone: UTC
+
+_export:
+  py:
+    python: /usr/local/bin/python3
+
+_error:
+  fail>: Error occurs!!!
+
++setup:
+  echo>: start ${session_time}
+
++disp_current_date:
+  echo>: ${moment(session_time).utc().format('YYYY-MM-DD HH:mm:ss Z')}
+
++select_target:
+  pg>: query/select_target.sql
+  store_last_results: all
+
++repeat:
+  for_each>:
+    settings: ${pg.last_results}
+  _do:
+    _export:
+      database: ${settings.customer_name}
+    +set_error:
+      py>: py.set_error.set_error
+    +execute_embulk:
+      if>: ${error}
+      _do:
+        _error:
+          echo>: Error occurs!!!
+      _else_do:
+        sh>: embulk run embulk/echo.yml.liquid
+  _parallel: true
+
++teardown:
+  echo>: finish ${session_time}
+
