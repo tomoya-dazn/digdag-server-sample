@@ -23,15 +23,21 @@ _error:
   _do:
     _export:
       database: ${settings.customer_name}
+
+    _retry:
+      limit: 3
+      interval: 10
+
     +set_error:
       py>: py.set_error.set_error
+
     +execute_embulk:
       if>: ${error}
       _do:
-        _error:
-          echo>: Error occurs!!!
+        fail>: Error!!! random value = ${random_val}
       _else_do:
         sh>: embulk run embulk/echo.yml.liquid
+
   _parallel: true
 
 +teardown:
