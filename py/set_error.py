@@ -3,4 +3,7 @@ import random
 
 
 def set_error():
-    digdag.env.store({'error': True if random.randint(1, 10) > 4 else False})
+    random_val = random.randint(1, 10)
+
+    digdag.env.store({'random_val': random_val})
+    digdag.env.store({'error': True if random_val > 4 else False})
